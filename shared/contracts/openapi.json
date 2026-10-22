@@ -1,0 +1,941 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NEXORA Intelligence Platform",
+    "description": "Evidence-first intelligence analysis and relationship platform backend.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "Health & Diagnostics"
+        ],
+        "summary": "System Health & Diagnostic Check",
+        "description": "Returns backend runtime status, active AI provider configuration, and canonical dataset readiness.",
+        "operationId": "get_system_health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases": {
+      "get": {
+        "tags": [
+          "Cases & Dossiers"
+        ],
+        "summary": "List All Verified Synthetic Cases",
+        "description": "Retrieves a list of all active synthetic investigation dossiers with summary counts.",
+        "operationId": "list_cases_api_v1_cases_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CaseSummary"
+                  },
+                  "type": "array",
+                  "title": "Response List Cases Api V1 Cases Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases/{case_id}": {
+      "get": {
+        "tags": [
+          "Cases & Dossiers"
+        ],
+        "summary": "Get Specific Case Dossier",
+        "description": "Retrieves comprehensive details of a specific synthetic case dossier by its stable identifier.",
+        "operationId": "get_case_by_id_api_v1_cases__case_id__get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Case"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases/{case_id}/entities": {
+      "get": {
+        "tags": [
+          "Entities & Subjects"
+        ],
+        "summary": "List Entities for Case",
+        "description": "Returns all verified synthetic entities linked to the given case dossier.",
+        "operationId": "get_entities_for_case_api_v1_cases__case_id__entities_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Entity"
+                  },
+                  "title": "Response Get Entities For Case Api V1 Cases  Case Id  Entities Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases/{case_id}/evidence": {
+      "get": {
+        "tags": [
+          "Evidence Vault"
+        ],
+        "summary": "List Evidence Records for Case",
+        "description": "Returns all verified evidence records linked to a specific case dossier, including checksums and custody logs.",
+        "operationId": "get_evidence_for_case_api_v1_cases__case_id__evidence_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Evidence"
+                  },
+                  "title": "Response Get Evidence For Case Api V1 Cases  Case Id  Evidence Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/evidence/{evidence_id}": {
+      "get": {
+        "tags": [
+          "Evidence Vault"
+        ],
+        "summary": "Get Specific Evidence Record",
+        "description": "Retrieves complete artifact metadata, chain of custody, and cryptographic checksum for a single evidence item.",
+        "operationId": "get_evidence_by_id_api_v1_evidence__evidence_id__get",
+        "parameters": [
+          {
+            "name": "evidence_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Evidence Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evidence"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases/{case_id}/relationships": {
+      "get": {
+        "tags": [
+          "Knowledge Graph Relationships"
+        ],
+        "summary": "List Entity & Incident Relationships for Case",
+        "description": "Returns all verified link graph edges, weights, provenance types, and supporting evidence citations for a case.",
+        "operationId": "get_relationships_for_case_api_v1_cases__case_id__relationships_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Relationship"
+                  },
+                  "title": "Response Get Relationships For Case Api V1 Cases  Case Id  Relationships Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Root"
+        ],
+        "summary": "Root",
+        "description": "Root info endpoint providing service descriptor and documentation links.",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AIProviderStatus": {
+        "properties": {
+          "active_provider": {
+            "type": "string",
+            "title": "Active Provider",
+            "description": "Active AI provider: 'none', 'ollama', or 'gemini'"
+          },
+          "ollama_configured": {
+            "type": "boolean",
+            "title": "Ollama Configured",
+            "description": "Whether Ollama endpoint is configured"
+          },
+          "gemini_configured": {
+            "type": "boolean",
+            "title": "Gemini Configured",
+            "description": "Whether Gemini API key is configured"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Provider operational status: 'ready', 'standby', 'error'"
+          }
+        },
+        "type": "object",
+        "required": [
+          "active_provider",
+          "ollama_configured",
+          "gemini_configured",
+          "status"
+        ],
+        "title": "AIProviderStatus"
+      },
+      "CanonicalDataSummary": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Status of the canonical synthetic repository"
+          },
+          "cases_count": {
+            "type": "integer",
+            "title": "Cases Count",
+            "description": "Total verified synthetic cases loaded",
+            "default": 0
+          },
+          "entities_count": {
+            "type": "integer",
+            "title": "Entities Count",
+            "description": "Total synthetic entities",
+            "default": 0
+          },
+          "evidence_count": {
+            "type": "integer",
+            "title": "Evidence Count",
+            "description": "Total synthetic evidence items",
+            "default": 0
+          },
+          "relationships_count": {
+            "type": "integer",
+            "title": "Relationships Count",
+            "description": "Total synthetic relationship edges",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "CanonicalDataSummary"
+      },
+      "Case": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^CASE-[0-9]{3,}$",
+            "title": "Id",
+            "description": "Stable case identifier, e.g. CASE-001"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 3,
+            "title": "Title",
+            "description": "Investigation title"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Summary",
+            "description": "Comprehensive investigation abstract"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Case lifecycle status (e.g. active, archived, closed, cold)",
+            "default": "active"
+          },
+          "priority": {
+            "type": "string",
+            "title": "Priority",
+            "description": "Operational priority (low, medium, high, critical)",
+            "default": "medium"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "UTC record creation timestamp"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "UTC last update timestamp"
+          },
+          "lead_analyst": {
+            "type": "string",
+            "title": "Lead Analyst",
+            "description": "Designated lead intelligence analyst"
+          },
+          "incident_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Incident Ids",
+            "description": "Associated incident identifiers"
+          },
+          "entity_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Entity Ids",
+            "description": "Associated entity identifiers"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Ids",
+            "description": "Associated evidence identifiers"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags",
+            "description": "Categorization and indexing tags"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "summary",
+          "lead_analyst"
+        ],
+        "title": "Case"
+      },
+      "CaseSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "priority": {
+            "type": "string",
+            "title": "Priority"
+          },
+          "lead_analyst": {
+            "type": "string",
+            "title": "Lead Analyst"
+          },
+          "incident_count": {
+            "type": "integer",
+            "title": "Incident Count"
+          },
+          "entity_count": {
+            "type": "integer",
+            "title": "Entity Count"
+          },
+          "evidence_count": {
+            "type": "integer",
+            "title": "Evidence Count"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "summary",
+          "status",
+          "priority",
+          "lead_analyst",
+          "incident_count",
+          "entity_count",
+          "evidence_count",
+          "updated_at"
+        ],
+        "title": "CaseSummary"
+      },
+      "CustodyEntry": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "UTC timestamp of the custody transfer or handling action"
+          },
+          "custodian": {
+            "type": "string",
+            "title": "Custodian",
+            "description": "Identity and credential of the handler (e.g. Officer or Analyst)"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action",
+            "description": "Specific operational action taken on the evidence artifact"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamp",
+          "custodian",
+          "action"
+        ],
+        "title": "CustodyEntry"
+      },
+      "Entity": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ENT-[0-9]{3,}$",
+            "title": "Id",
+            "description": "Stable entity identifier, e.g. ENT-001"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "Entity category (e.g. person, organization, vehicle, digital_asset, financial_account)"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 1,
+            "title": "Name",
+            "description": "Primary recognized name or label"
+          },
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Aliases",
+            "description": "Known aliases, call-signs, or monikers"
+          },
+          "identifiers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Identifiers",
+            "description": "Synthetic verifiable identifiers (e.g. badge_id, rfid_key, ip_address)"
+          },
+          "attributes": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Attributes",
+            "description": "Domain-specific attributes (role, clearance, organization, registration)"
+          },
+          "reliability_score": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Reliability Score",
+            "description": "Assessed source reliability score between 0.0 and 1.0",
+            "default": 0.8
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes",
+            "description": "Investigative analyst notes"
+          },
+          "case_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Case Ids",
+            "description": "Cases in which this entity is referenced"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "category",
+          "name"
+        ],
+        "title": "Entity"
+      },
+      "Evidence": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^EVD-[0-9]{3,}$",
+            "title": "Id",
+            "description": "Stable evidence identifier, e.g. EVD-001"
+          },
+          "case_id": {
+            "type": "string",
+            "pattern": "^CASE-[0-9]{3,}$",
+            "title": "Case Id",
+            "description": "Parent case identifier"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 3,
+            "title": "Title",
+            "description": "Evidence title or artifact label"
+          },
+          "evidence_type": {
+            "type": "string",
+            "title": "Evidence Type",
+            "description": "Type: digital_video, access_log, forensic_report, telemetry_dump, witness_statement"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "Originating source system, officer, or repository"
+          },
+          "collected_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Collected At",
+            "description": "UTC timestamp of collection"
+          },
+          "chain_of_custody": {
+            "items": {
+              "$ref": "#/components/schemas/CustodyEntry"
+            },
+            "type": "array",
+            "title": "Chain Of Custody",
+            "description": "Verifiable historical chain of custody entries"
+          },
+          "checksum": {
+            "type": "string",
+            "title": "Checksum",
+            "description": "Cryptographic hash for artifact integrity (e.g. sha256:...)"
+          },
+          "confidence_score": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence Score",
+            "description": "Assessed evidence reliability score between 0.0 and 1.0",
+            "default": 0.9
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Summary",
+            "description": "Factual analysis and description of artifact contents"
+          },
+          "raw_metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Raw Metadata",
+            "description": "Forensic metadata (file size, resolution, sensor serials, packet counts)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "case_id",
+          "title",
+          "evidence_type",
+          "source",
+          "collected_at",
+          "checksum",
+          "summary"
+        ],
+        "title": "Evidence"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Overall health state",
+            "default": "ok"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service",
+            "description": "Service identifier",
+            "default": "nexora-backend"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "Backend service semantic version",
+            "default": "0.1.0"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "description": "Runtime environment"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline",
+            "description": "NEXORA motto",
+            "default": "Every Connection Reveals a Clue."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "Current server UTC timestamp"
+          },
+          "ai_provider": {
+            "$ref": "#/components/schemas/AIProviderStatus",
+            "description": "AI subsystem status"
+          },
+          "canonical_data": {
+            "$ref": "#/components/schemas/CanonicalDataSummary",
+            "description": "Canonical store status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "environment",
+          "ai_provider",
+          "canonical_data"
+        ],
+        "title": "HealthResponse"
+      },
+      "Relationship": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^REL-[0-9]{3,}$",
+            "title": "Id",
+            "description": "Stable relationship identifier, e.g. REL-001"
+          },
+          "case_id": {
+            "type": "string",
+            "pattern": "^CASE-[0-9]{3,}$",
+            "title": "Case Id",
+            "description": "Parent case identifier"
+          },
+          "source_id": {
+            "type": "string",
+            "title": "Source Id",
+            "description": "Source entity, location, or incident identifier"
+          },
+          "target_id": {
+            "type": "string",
+            "title": "Target Id",
+            "description": "Target entity, location, or incident identifier"
+          },
+          "relationship_type": {
+            "type": "string",
+            "title": "Relationship Type",
+            "description": "Typed link: present_at, communicated_with, employed_by, controls, transferred_funds, co_occurring"
+          },
+          "direction": {
+            "type": "string",
+            "title": "Direction",
+            "description": "Directionality: directed, bidirectional, undirected",
+            "default": "directed"
+          },
+          "weight": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Weight",
+            "description": "Normalized link strength weight (0.0 to 1.0)",
+            "default": 0.8
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Time",
+            "description": "Optional temporal validity window start"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Time",
+            "description": "Optional temporal validity window end"
+          },
+          "supporting_evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Supporting Evidence Ids",
+            "description": "Evidence identifiers validating this link"
+          },
+          "inference_type": {
+            "type": "string",
+            "title": "Inference Type",
+            "description": "Provenance level: 'factual' (hard evidence), 'analytical_lead' (algorithmic correlation), 'ai_hypothesis' (AI suggestion)",
+            "default": "factual"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "description": "Confidence score in the veracity of the link",
+            "default": 0.9
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes",
+            "description": "Analyst notes and context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "case_id",
+          "source_id",
+          "target_id",
+          "relationship_type"
+        ],
+        "title": "Relationship"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

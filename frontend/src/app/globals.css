@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0C1323;
+  --foreground: #DCE2F9;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+code, kbd, samp, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Custom analytical scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #070E1E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #141B2C;
+  border-radius: 3px;
+  border: 1px solid rgba(148, 175, 214, 0.12);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #232A3B;
+}
+
+/* Subtle analytical grid background */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(148, 175, 214, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 175, 214, 0.04) 1px, transparent 1px);
+}
+
+/* Glassmorphism panels for overlays and modals */
+.glass-overlay {
+  background: rgba(27, 38, 56, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 175, 214, 0.24);
+}
+
+.glass-dropdown {
+  background: rgba(20, 27, 44, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 175, 214, 0.18);
+}
