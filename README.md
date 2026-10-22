@@ -163,12 +163,12 @@ Production build succeeds with 0 errors and zero lint warnings.
 | **2** | **Product Design & UX** | **Complete** | Tactical Workstation design system, Stitch screens, responsive layouts, Command Palette, Context Inspector, and UX workflows. |
 | **3** | **Rapid Demo Implementation** | **Complete** | In-memory synthetic dataset, 9 FastAPI routes, Cases Workstation, Knowledge Graph canvas, Timeline reconstruction, and GitHub sync. |
 | **4** | **Case Explorer & Knowledge Graph** | **Complete** | Connected Command Center, multi-filter Case Explorer, interactive SVG link canvas, zoom/fit toolbar, edge/node provenance inspection, and bidirectional routing. |
-| **5** | **Geospatial Intelligence** | Planned | MapLibre incident-density heatmaps and spatial coordinate clustering. |
+| **5** | **Geospatial Intelligence** | **Complete** | Tactical cartography, sensor FOV cones, RF burst coverage, and coordinate geolocation mapping. |
 | **6** | **Modus Operandi Analysis** | Planned | Tactical feature vectors and explainable similarity matrix. |
-| **7** | **Temporal Analytics** | Planned | Deep multi-stream chronological alignment and sequence anomaly detection. |
+| **7** | **Temporal Analytics** | **Complete** | Deep multi-stream chronological alignment and sequence anomaly detection. |
 | **8** | **Evidence Vault & Provenance** | **Complete** | Cryptographic custody tracking, source vs. calculated SHA-256 vs. verified reference distinction, and live WebCrypto calculator. |
 | **9** | **Intelligence Copilot** | **Complete** | Local Gemma 4 E4B assistive reasoning drawer with compulsory evidence citations, epistemic breakdown, and live provider diagnostics. |
-| **10** | **Competing Hypotheses** | Planned | Richards Heuer ACH matrix with cognitive bias elimination. |
+| **10** | **Intelligence Fusion Studio** | **Complete** | Synchronized multi-pane workbench coordinating topological graphs, chronological streams, and evidence vaults in real time. |
 | **11** | **Report Generation** | **Complete** | Source-linked downloadable JSON case dossier export and browser printable executive summary. |
 | **12** | **Data Quality & Audit** | Planned | Automated graph cycle detection, integrity audits, and user activity logging. |
 

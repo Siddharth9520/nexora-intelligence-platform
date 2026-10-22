@@ -17,6 +17,7 @@ import {
   Shield,
   User,
   Plus,
+  Layers,
 } from "lucide-react";
 
 interface NavItem {
@@ -39,6 +40,7 @@ const NAV_GROUPS: NavGroup[] = [
       { id: "command-center", name: "Command Center", icon: LayoutDashboard, status: "active" },
       { id: "cases", name: "Cases", icon: FolderSearch, status: "ready", badge: "1" },
       { id: "knowledge-graph", name: "Knowledge Graph", icon: Network, status: "ready" },
+      { id: "fusion-studio", name: "Fusion Studio", icon: Layers, status: "ready", badge: "SYNC" },
       { id: "map", name: "Map", icon: MapPin, status: "ready" },
     ],
   },

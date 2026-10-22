@@ -11,6 +11,8 @@ import { KnowledgeGraphView } from "@/components/views/KnowledgeGraphView";
 import { TimelineView } from "@/components/views/TimelineView";
 import { EvidenceVaultView } from "@/components/views/EvidenceVaultView";
 import { CopilotView } from "@/components/views/CopilotView";
+import { FusionStudioView } from "@/components/views/FusionStudioView";
+import { GeospatialMapView } from "@/components/views/GeospatialMapView";
 import { nexoraApi } from "@/lib/api-client";
 import { HealthResponse, DashboardSummary } from "@/types/intelligence";
 import {
@@ -151,9 +153,17 @@ export default function CommandCenterPage() {
       id: "map",
       title: "Geospatial Map",
       icon: MapPin,
-      desc: "Tactical cartography mapping sensor placements, FOV cones, and waypoints (Scheduled for Phase 5).",
-      status: "Planned",
-      badge: "PHASE 5 CARTO",
+      desc: "Tactical cartography mapping sensor placements, FOV cones, and vehicle waypoints.",
+      status: "Ready",
+      badge: "TACTICAL SPATIAL",
+    },
+    {
+      id: "fusion-studio",
+      title: "Fusion Studio",
+      icon: Layers,
+      desc: "Synchronized multi-pane workspace locking entity focus across canvases.",
+      status: "Ready",
+      badge: "SYNCHRONIZED",
     },
     {
       id: "evidence-vault",
@@ -265,6 +275,30 @@ export default function CommandCenterPage() {
               classification: "AI ASSISTANT",
               description: "AI reasoning engine constrained to verified case evidence. Epistemically isolates facts, analytical leads, and investigative gaps.",
               metadata: { "Model": "Ollama Gemma 4 E4B", "Grounding": "Canonical Store Evidence" },
+            });
+          } else if (id === "map") {
+            setInspectorItem({
+              type: "entity",
+              id: "LOC-001",
+              title: "AeroGrid Substation #04 - Gate 4",
+              subtitle: "45°31'12.4\"N 122°40'55.2\"W",
+              confidence: 96,
+              epistemicType: "fact",
+              classification: "FACILITY",
+              description: "North perimeter turnstile access portal. RFID credential cloning ingress point.",
+              metadata: { "Sensor Coverage": "Cam-04 NVR", "Breach Vector": "Gate 4 Turnstile" },
+            });
+          } else if (id === "fusion-studio") {
+            setInspectorItem({
+              type: "case",
+              id: selectedCaseId,
+              title: "Intelligence Fusion Workspace",
+              subtitle: "Synchronized Analysis Matrix",
+              confidence: 92,
+              epistemicType: "result",
+              classification: "FUSION STUDIO",
+              description: "Coordinated multi-pane workspace locking entity focus across topological graphs, chronological streams, and evidence custody vaults.",
+              metadata: { "Active Case": selectedCaseId, "Sync Mode": "Real-time" },
             });
           }
         }}
@@ -379,6 +413,29 @@ export default function CommandCenterPage() {
                   setSelectedCaseId(cid);
                   setActiveModule("timeline");
                 }}
+                onNavigateToCase={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("cases");
+                }}
+                onSelectInspectorItem={(item) => {
+                  setInspectorItem(item);
+                  setIsInspectorOpen(true);
+                }}
+              />
+            ) : activeModule === "fusion-studio" ? (
+              <FusionStudioView
+                caseId={selectedCaseId}
+                onSelectCaseId={setSelectedCaseId}
+                onNavigateToModule={(mod) => setActiveModule(mod)}
+                onSelectInspectorItem={(item) => {
+                  setInspectorItem(item);
+                  setIsInspectorOpen(true);
+                }}
+              />
+            ) : activeModule === "map" ? (
+              <GeospatialMapView
+                caseId={selectedCaseId}
+                onSelectCaseId={setSelectedCaseId}
                 onNavigateToCase={(cid) => {
                   setSelectedCaseId(cid);
                   setActiveModule("cases");
