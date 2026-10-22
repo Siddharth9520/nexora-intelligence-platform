@@ -37,12 +37,16 @@ import {
   FileText,
   Plus,
   X,
+  Bot,
 } from "lucide-react";
 
 interface CasesScreenProps {
   selectedCaseId?: string;
   onSelectCaseId?: (caseId: string) => void;
   onOpenGraph?: (caseId: string) => void;
+  onOpenTimeline?: (caseId: string) => void;
+  onOpenEvidenceVault?: (caseId: string, evidenceId?: string) => void;
+  onOpenCopilot?: (caseId: string) => void;
   onOpenCreateCase?: () => void;
   onSelectInspectorItem: (item: InspectorItem) => void;
 }
@@ -51,6 +55,9 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
   selectedCaseId = "CASE-001",
   onSelectCaseId,
   onOpenGraph,
+  onOpenTimeline,
+  onOpenEvidenceVault,
+  onOpenCopilot,
   onOpenCreateCase,
   onSelectInspectorItem,
 }) => {
@@ -432,19 +439,49 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
                     {activeCase.summary}
                   </p>
 
-                  {/* ACTION: OPEN GRAPH */}
-                  {onOpenGraph && (
-                    <div className="pt-3">
+                  {/* ACTION BAR: CROSS-MODULE INTEGRATION */}
+                  <div className="pt-3 flex flex-wrap items-center gap-2">
+                    {onOpenGraph && (
                       <button
                         onClick={() => onOpenGraph(activeCase.id)}
-                        className="px-3.5 py-2 rounded-md bg-nexora-purpleActive hover:bg-nexora-purple text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-nexora-purple/20 transition-all group"
+                        className="px-3 py-1.5 rounded bg-nexora-purpleActive hover:bg-nexora-purple text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-nexora-purple/20 transition-all group"
                       >
-                        <Network className="w-4 h-4 text-nexora-cyan group-hover:scale-110 transition-transform" />
-                        <span>Explore Case Knowledge Graph</span>
-                        <ArrowRight className="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 transition-transform" />
+                        <Network className="w-3.5 h-3.5 text-nexora-cyan group-hover:scale-110 transition-transform" />
+                        <span>Knowledge Graph</span>
+                        <ArrowRight className="w-3 h-3 opacity-80 group-hover:translate-x-0.5 transition-transform" />
                       </button>
-                    </div>
-                  )}
+                    )}
+
+                    {onOpenTimeline && (
+                      <button
+                        onClick={() => onOpenTimeline(activeCase.id)}
+                        className="px-3 py-1.5 rounded bg-nexora-lowest border border-nexora-border hover:border-nexora-cyan text-white text-xs font-semibold flex items-center gap-1.5 transition-all"
+                      >
+                        <Clock className="w-3.5 h-3.5 text-nexora-cyan" />
+                        <span>Timeline</span>
+                      </button>
+                    )}
+
+                    {onOpenEvidenceVault && (
+                      <button
+                        onClick={() => onOpenEvidenceVault(activeCase.id)}
+                        className="px-3 py-1.5 rounded bg-nexora-lowest border border-nexora-border hover:border-nexora-cyan text-white text-xs font-semibold flex items-center gap-1.5 transition-all"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5 text-nexora-cyan" />
+                        <span>Evidence Vault</span>
+                      </button>
+                    )}
+
+                    {onOpenCopilot && (
+                      <button
+                        onClick={() => onOpenCopilot(activeCase.id)}
+                        className="px-3 py-1.5 rounded bg-purple-950/60 border border-purple-800 hover:border-purple-600 text-purple-200 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                      >
+                        <Bot className="w-3.5 h-3.5 text-nexora-purpleBright" />
+                        <span>AI Copilot</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 <div className="text-right flex-shrink-0 text-xs font-mono text-nexora-textSubtle sm:border-l sm:border-nexora-border sm:pl-4 space-y-1">

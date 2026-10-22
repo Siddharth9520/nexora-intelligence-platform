@@ -172,3 +172,34 @@ export interface Hypothesis {
   inconsistent_evidence_ids: string[];
 }
 
+export interface CopilotCitation {
+  id: string;
+  title: string;
+  checksum?: string;
+}
+
+export interface CopilotQueryResponse {
+  case_id: string;
+  prompt: string;
+  answer: string;
+  provider: string;
+  model: string;
+  status: 'generated' | 'grounded_retrieval' | 'provider_standby';
+  citations: CopilotCitation[];
+  factual_observations: string[];
+  analytical_leads: string[];
+  unverified_gaps: string[];
+  latency_ms: number;
+}
+
+export interface CopilotStatusResponse {
+  active_provider: string;
+  configured_model: string;
+  ollama_available: boolean;
+  ollama_endpoint: string;
+  gemini_available: boolean;
+  gemini_model: string;
+  system_readiness: 'ready' | 'standby';
+  setup_guide: Record<string, string>;
+}
+

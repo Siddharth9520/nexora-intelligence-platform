@@ -7,6 +7,7 @@ from app.api.v1.endpoints.relationships import router as relationships_router
 from app.api.v1.endpoints.dashboard import router as dashboard_router
 from app.api.v1.endpoints.timeline import router as timeline_router
 from app.api.v1.endpoints.hypotheses import router as hypotheses_router
+from app.api.v1.endpoints.copilot import router as copilot_router
 
 api_v1_router = APIRouter()
 
@@ -18,4 +19,6 @@ api_v1_router.include_router(evidence_router, tags=["Evidence Vault"])
 api_v1_router.include_router(relationships_router, tags=["Knowledge Graph Relationships"])
 api_v1_router.include_router(timeline_router, tags=["Chronological Timeline"])
 api_v1_router.include_router(hypotheses_router, tags=["ACH Hypotheses"])
+api_v1_router.include_router(copilot_router, tags=["AI Copilot Intelligence"])
+
 

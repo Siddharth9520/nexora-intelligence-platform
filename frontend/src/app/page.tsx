@@ -9,6 +9,8 @@ import { CommandPaletteModal } from "@/components/modals/CommandPaletteModal";
 import { CasesScreen } from "@/components/views/CasesScreen";
 import { KnowledgeGraphView } from "@/components/views/KnowledgeGraphView";
 import { TimelineView } from "@/components/views/TimelineView";
+import { EvidenceVaultView } from "@/components/views/EvidenceVaultView";
+import { CopilotView } from "@/components/views/CopilotView";
 import { nexoraApi } from "@/lib/api-client";
 import { HealthResponse, DashboardSummary } from "@/types/intelligence";
 import {
@@ -38,6 +40,7 @@ import {
 export default function CommandCenterPage() {
   const [activeModule, setActiveModule] = useState<string>("command-center");
   const [selectedCaseId, setSelectedCaseId] = useState<string>("CASE-001");
+  const [selectedEvidenceId, setSelectedEvidenceId] = useState<string>("EVD-001");
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [dashboard, setDashboard] = useState<DashboardSummary | null>(null);
   const [latencyMs, setLatencyMs] = useState<number | null>(null);
@@ -226,6 +229,43 @@ export default function CommandCenterPage() {
               metadata: { "Alias": "Kestrel-09", "Status": "Active Person of Interest" },
               linkedEvidence: [{ id: "EVD-001", title: "CCTV Cam-04 Entry" }],
             });
+          } else if (id === "evidence-vault") {
+            setInspectorItem({
+              type: "evidence",
+              id: "EVD-001",
+              title: "CCTV Video Feed - Telemetry Cabin Entry 04",
+              subtitle: "AeroGrid North Substation Array",
+              classification: "VIDEO RECORD",
+              confidence: 96,
+              epistemicType: "fact",
+              description: "High-definition video showing subject in dark coveralls using a cloned RFID credential at door 04.",
+              hash: "sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069",
+              metadata: { "Camera ID": "Cam-04", "Resolution": "1080p60", "Integrity State": "Calculated SHA-256 Verified" },
+            });
+          } else if (id === "timeline") {
+            setInspectorItem({
+              type: "event",
+              id: "EVT-004",
+              title: "Door 04 Forced Mechanical/RFID Bypass",
+              subtitle: "2026-03-14 02:41:09 UTC",
+              confidence: 94,
+              epistemicType: "fact",
+              classification: "CHRONO LOG",
+              description: "Subject entered cabin door 04. Corroborated by CCTV EVD-001 and PACS log EVD-002.",
+              metadata: { "Sync": "NTP Pool 0 Clock", "Significance": "CRITICAL" },
+            });
+          } else if (id === "copilot") {
+            setInspectorItem({
+              type: "hypothesis",
+              id: "AI-COPILOT",
+              title: "Investigative AI Copilot",
+              subtitle: "Grounded Reasoning Telemetry",
+              confidence: 90,
+              epistemicType: "lead",
+              classification: "AI ASSISTANT",
+              description: "AI reasoning engine constrained to verified case evidence. Epistemically isolates facts, analytical leads, and investigative gaps.",
+              metadata: { "Model": "Ollama Gemma 4 E4B", "Grounding": "Canonical Store Evidence" },
+            });
           }
         }}
         onNewCase={() => setIsCreateModalOpen(true)}
@@ -252,13 +292,26 @@ export default function CommandCenterPage() {
         <div className="flex-1 flex min-w-0">
           <main className="flex-1 p-6 lg:p-8 space-y-8 overflow-y-auto max-w-6xl mx-auto w-full">
             {/* VIEW ROUTING */}
-            {activeModule === "cases" || activeModule === "evidence-vault" || activeModule === "hypotheses" ? (
+            {activeModule === "cases" || activeModule === "hypotheses" ? (
               <CasesScreen
                 selectedCaseId={selectedCaseId}
                 onSelectCaseId={setSelectedCaseId}
                 onOpenGraph={(cid) => {
                   setSelectedCaseId(cid);
                   setActiveModule("knowledge-graph");
+                }}
+                onOpenTimeline={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("timeline");
+                }}
+                onOpenEvidenceVault={(cid, evId) => {
+                  setSelectedCaseId(cid);
+                  if (evId) setSelectedEvidenceId(evId);
+                  setActiveModule("evidence-vault");
+                }}
+                onOpenCopilot={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("copilot");
                 }}
                 onOpenCreateCase={() => setIsCreateModalOpen(true)}
                 onSelectInspectorItem={(item) => {
@@ -282,6 +335,54 @@ export default function CommandCenterPage() {
             ) : activeModule === "timeline" ? (
               <TimelineView
                 caseId={selectedCaseId}
+                onSelectCaseId={setSelectedCaseId}
+                onNavigateToEvidence={(evId) => {
+                  setSelectedEvidenceId(evId);
+                  setActiveModule("evidence-vault");
+                }}
+                onNavigateToCase={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("cases");
+                }}
+                onSelectInspectorItem={(item) => {
+                  setInspectorItem(item);
+                  setIsInspectorOpen(true);
+                }}
+              />
+            ) : activeModule === "evidence-vault" ? (
+              <EvidenceVaultView
+                initialCaseId={selectedCaseId}
+                initialEvidenceId={selectedEvidenceId}
+                onSelectCaseId={setSelectedCaseId}
+                onNavigateToTimeline={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("timeline");
+                }}
+                onNavigateToCase={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("cases");
+                }}
+                onSelectInspectorItem={(item) => {
+                  setInspectorItem(item);
+                  setIsInspectorOpen(true);
+                }}
+              />
+            ) : activeModule === "copilot" ? (
+              <CopilotView
+                initialCaseId={selectedCaseId}
+                onSelectCaseId={setSelectedCaseId}
+                onNavigateToEvidence={(evId) => {
+                  setSelectedEvidenceId(evId);
+                  setActiveModule("evidence-vault");
+                }}
+                onNavigateToTimeline={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("timeline");
+                }}
+                onNavigateToCase={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("cases");
+                }}
                 onSelectInspectorItem={(item) => {
                   setInspectorItem(item);
                   setIsInspectorOpen(true);

@@ -8,7 +8,9 @@ import {
   DashboardSummary,
   TimelineEvent,
   Hypothesis,
-  APIErrorDetail
+  APIErrorDetail,
+  CopilotQueryResponse,
+  CopilotStatusResponse
 } from "@/types/intelligence";
 
 const API_BASE_URL =
@@ -127,6 +129,21 @@ export const nexoraApi = {
   async getHypotheses(caseId?: string): Promise<Hypothesis[]> {
     const query = caseId ? `?case_id=${encodeURIComponent(caseId)}` : "";
     return request<Hypothesis[]>(`hypotheses${query}`);
+  },
+
+  async getCopilotStatus(): Promise<CopilotStatusResponse> {
+    return request<CopilotStatusResponse>("copilot/status");
+  },
+
+  async queryCopilot(caseId: string, prompt: string, provider?: string): Promise<CopilotQueryResponse> {
+    return request<CopilotQueryResponse>("copilot/query", {
+      method: "POST",
+      body: JSON.stringify({
+        case_id: caseId,
+        prompt,
+        provider: provider || undefined,
+      }),
+    });
   },
 };
 
