@@ -142,15 +142,15 @@ export default function CommandCenterPage() {
       icon: Network,
       desc: "Interactive topological relationship canvas linking entities, suspects, and targets.",
       status: "Ready",
-      badge: "SIGNATURE",
+      badge: "SIGNATURE CANVAS",
     },
     {
       id: "map",
       title: "Geospatial Map",
       icon: MapPin,
-      desc: "Tactical dark cartography mapping sensor placements, FOV cones, and waypoints.",
-      status: "Ready",
-      badge: "CARTO",
+      desc: "Tactical cartography mapping sensor placements, FOV cones, and waypoints (Scheduled for Phase 5).",
+      status: "Planned",
+      badge: "PHASE 5 CARTO",
     },
     {
       id: "evidence-vault",
@@ -158,7 +158,7 @@ export default function CommandCenterPage() {
       icon: ShieldCheck,
       desc: "Cryptographically notarized evidence records with SHA-256 custody seals.",
       status: "Ready",
-      badge: "SHA-256",
+      badge: "SHA-256 VAULT",
     },
     {
       id: "timeline",
@@ -166,15 +166,15 @@ export default function CommandCenterPage() {
       icon: Clock,
       desc: "Chronological multi-stream feeds distinguishing documented facts from leads.",
       status: "Ready",
-      badge: "CHRONO",
+      badge: "CHRONO FEED",
     },
     {
       id: "copilot",
       title: "AI Copilot",
       icon: Bot,
-      desc: "Assistive reasoning grounded in local Ollama Gemma 4 E4B models with citations.",
-      status: "Ready",
-      badge: "LOCAL AI",
+      desc: "Assistive reasoning grounded in local Ollama Gemma 4 E4B models with compulsory citations.",
+      status: "Standby",
+      badge: "OLLAMA STANDBY",
     },
     {
       id: "hypotheses",
@@ -256,6 +256,11 @@ export default function CommandCenterPage() {
               <CasesScreen
                 selectedCaseId={selectedCaseId}
                 onSelectCaseId={setSelectedCaseId}
+                onOpenGraph={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("knowledge-graph");
+                }}
+                onOpenCreateCase={() => setIsCreateModalOpen(true)}
                 onSelectInspectorItem={(item) => {
                   setInspectorItem(item);
                   setIsInspectorOpen(true);
@@ -264,6 +269,11 @@ export default function CommandCenterPage() {
             ) : activeModule === "knowledge-graph" ? (
               <KnowledgeGraphView
                 caseId={selectedCaseId}
+                onSelectCaseId={setSelectedCaseId}
+                onReturnToCase={(cid) => {
+                  setSelectedCaseId(cid);
+                  setActiveModule("cases");
+                }}
                 onSelectInspectorItem={(item) => {
                   setInspectorItem(item);
                   setIsInspectorOpen(true);

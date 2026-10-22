@@ -55,9 +55,10 @@ export const CreateCaseModal: React.FC<CreateCaseModalProps> = ({
 
     // Simulate creation
     setTimeout(() => {
+      const demoId = "CASE-004";
       setIsSubmitting(false);
       onSuccess({
-        id: "CASE-002",
+        id: demoId,
         name: caseName,
         priority: priority,
       });

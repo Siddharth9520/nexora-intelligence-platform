@@ -35,17 +35,23 @@ import {
   Database,
   Radio,
   FileText,
+  Plus,
+  X,
 } from "lucide-react";
 
 interface CasesScreenProps {
   selectedCaseId?: string;
   onSelectCaseId?: (caseId: string) => void;
+  onOpenGraph?: (caseId: string) => void;
+  onOpenCreateCase?: () => void;
   onSelectInspectorItem: (item: InspectorItem) => void;
 }
 
 export const CasesScreen: React.FC<CasesScreenProps> = ({
   selectedCaseId = "CASE-001",
   onSelectCaseId,
+  onOpenGraph,
+  onOpenCreateCase,
   onSelectInspectorItem,
 }) => {
   const [cases, setCases] = useState<CaseSummary[]>([]);
@@ -62,6 +68,9 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
   >("overview");
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+
   const [isLoadingCases, setIsLoadingCases] = useState(true);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -142,17 +151,21 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
   }, [activeCaseId]);
 
   const filteredCases = useMemo(() => {
-    if (!searchQuery.trim()) return cases;
-    const q = searchQuery.toLowerCase();
-    return cases.filter(
-      (c) =>
+    return cases.filter((c) => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
         c.id.toLowerCase().includes(q) ||
         c.title.toLowerCase().includes(q) ||
         c.summary.toLowerCase().includes(q) ||
-        c.priority.toLowerCase().includes(q) ||
-        c.status.toLowerCase().includes(q)
-    );
-  }, [cases, searchQuery]);
+        c.lead_analyst.toLowerCase().includes(q);
+
+      const matchesStatus = statusFilter === "all" || c.status.toLowerCase() === statusFilter.toLowerCase();
+      const matchesPriority = priorityFilter === "all" || c.priority.toLowerCase() === priorityFilter.toLowerCase();
+
+      return matchesSearch && matchesStatus && matchesPriority;
+    });
+  }, [cases, searchQuery, statusFilter, priorityFilter]);
 
   const handleSelectCase = (caseId: string) => {
     setActiveCaseId(caseId);
@@ -197,6 +210,12 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
     }
   };
 
+  const resetFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("all");
+    setPriorityFilter("all");
+  };
+
   return (
     <div className="space-y-6">
       {/* HEADER & CONTROLS */}
@@ -219,17 +238,37 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Search Input */}
           <div className="relative">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-nexora-textSubtle" />
             <input
               type="text"
-              placeholder="Filter dossiers (e.g. Vanguard)..."
+              placeholder="Search by title, ID, or lead..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 rounded bg-nexora-surface border border-nexora-border text-xs text-nexora-text placeholder-nexora-textSubtle focus:outline-none focus:border-nexora-purple w-56 sm:w-64"
+              className="pl-8 pr-7 py-1.5 rounded bg-nexora-surface border border-nexora-border text-xs text-nexora-text placeholder-nexora-textSubtle focus:outline-none focus:border-nexora-purple w-56 sm:w-64"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-nexora-textSubtle hover:text-white"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
           </div>
+
+          {/* New Case Button */}
+          {onOpenCreateCase && (
+            <button
+              onClick={onOpenCreateCase}
+              className="px-3 py-1.5 rounded bg-nexora-purpleActive hover:bg-nexora-purple text-xs font-medium text-white flex items-center gap-1.5 shadow-md shadow-nexora-purple/20 transition-all"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>New Dossier</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -248,13 +287,48 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
         </div>
       )}
 
+      {/* FILTER TABS BAR */}
+      <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[11px] text-nexora-textSubtle uppercase mr-1">Status:</span>
+          {["all", "active", "archived", "closed"].map((st) => (
+            <button
+              key={st}
+              onClick={() => setStatusFilter(st)}
+              className={`px-2.5 py-1 rounded capitalize font-medium transition-all ${
+                statusFilter === st
+                  ? "bg-nexora-purpleActive text-white"
+                  : "bg-nexora-surface border border-nexora-border text-nexora-textSubtle hover:text-nexora-text"
+              }`}
+            >
+              {st}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-nexora-textSubtle uppercase">Priority:</span>
+          <select
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+            className="px-2 py-1 rounded bg-nexora-surface border border-nexora-border text-xs text-nexora-text focus:outline-none focus:border-nexora-purple"
+          >
+            <option value="all">All Priorities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </div>
+
       {/* TWO-COLUMN WORKSTATION LAYOUT */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN: CASE SELECTOR LIST (4 COLS) */}
         <div className="lg:col-span-4 space-y-3">
           <div className="flex items-center justify-between text-xs font-mono text-nexora-textSubtle uppercase tracking-wider px-1">
             <span>Dossier Index</span>
-            <span>{filteredCases.length} Available</span>
+            <span>{filteredCases.length} Matched</span>
           </div>
 
           {isLoadingCases ? (
@@ -262,8 +336,14 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
               Loading synthetic cases...
             </div>
           ) : filteredCases.length === 0 ? (
-            <div className="p-6 text-center text-xs font-mono text-nexora-textSubtle bg-nexora-surface rounded-lg border border-nexora-border">
-              No matching cases found for &quot;{searchQuery}&quot;
+            <div className="p-6 text-center text-xs font-mono text-nexora-textSubtle bg-nexora-surface rounded-lg border border-nexora-border space-y-2">
+              <p>No matching cases found for query &quot;{searchQuery}&quot;</p>
+              <button
+                onClick={resetFilters}
+                className="px-2.5 py-1 rounded bg-nexora-raised border border-nexora-border text-xs text-nexora-text hover:text-white"
+              >
+                Reset Filters
+              </button>
             </div>
           ) : (
             <div className="space-y-2.5">
@@ -332,7 +412,7 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
           ) : activeCase ? (
             <div className="p-5 md:p-6 rounded-lg bg-nexora-surface border border-nexora-border space-y-5">
               {/* DOSSIER HEADER */}
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-nexora-border/70 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-nexora-border/70 pb-4">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-xs font-bold text-nexora-cyan px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/60">
@@ -351,6 +431,20 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
                   <p className="text-xs text-nexora-textSecondary mt-1 leading-relaxed max-w-2xl">
                     {activeCase.summary}
                   </p>
+
+                  {/* ACTION: OPEN GRAPH */}
+                  {onOpenGraph && (
+                    <div className="pt-3">
+                      <button
+                        onClick={() => onOpenGraph(activeCase.id)}
+                        className="px-3.5 py-2 rounded-md bg-nexora-purpleActive hover:bg-nexora-purple text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-nexora-purple/20 transition-all group"
+                      >
+                        <Network className="w-4 h-4 text-nexora-cyan group-hover:scale-110 transition-transform" />
+                        <span>Explore Case Knowledge Graph</span>
+                        <ArrowRight className="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 transition-transform" />
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <div className="text-right flex-shrink-0 text-xs font-mono text-nexora-textSubtle sm:border-l sm:border-nexora-border sm:pl-4 space-y-1">
@@ -417,8 +511,17 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
 
                   {/* QUICK ACCESS HIGHLIGHTS */}
                   <div className="space-y-2">
-                    <div className="text-xs font-mono text-nexora-textSubtle uppercase">
-                      Primary Entities of Interest
+                    <div className="flex items-center justify-between text-xs font-mono text-nexora-textSubtle uppercase">
+                      <span>Primary Entities of Interest</span>
+                      {onOpenGraph && (
+                        <button
+                          onClick={() => onOpenGraph(activeCase.id)}
+                          className="text-nexora-purple hover:text-nexora-purpleBright flex items-center gap-1 transition-colors"
+                        >
+                          <span>View in Graph</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      )}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {entities.slice(0, 4).map((ent) => (
@@ -614,8 +717,17 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
               {/* TAB 4: RELATIONSHIPS */}
               {activeTab === "relationships" && (
                 <div className="space-y-3">
-                  <div className="text-xs text-nexora-textSubtle font-mono">
-                    {relationships.length} verified link graph edges between entities and incidents.
+                  <div className="flex items-center justify-between text-xs text-nexora-textSubtle font-mono">
+                    <span>{relationships.length} verified link graph edges between entities and incidents.</span>
+                    {onOpenGraph && (
+                      <button
+                        onClick={() => onOpenGraph(activeCase.id)}
+                        className="text-nexora-purple hover:text-nexora-purpleBright flex items-center gap-1 transition-colors"
+                      >
+                        <span>Open Canvas</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </button>
+                    )}
                   </div>
                   <div className="space-y-2">
                     {relationships.map((rel) => (

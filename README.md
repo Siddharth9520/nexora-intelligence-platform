@@ -160,7 +160,7 @@ Production build succeeds with 0 errors and zero lint warnings.
 | **1** | **Foundation & Blueprint** | **Complete** | Architecture, API gateway, Pydantic schemas, Next.js workspace, and live diagnostics. |
 | **2** | **Product Design & UX** | **Complete** | Tactical Workstation design system, Stitch screens, responsive layouts, Command Palette, Context Inspector, and UX workflows. |
 | **3** | **Rapid Demo Implementation** | **Complete** | In-memory synthetic dataset, 9 FastAPI routes, Cases Workstation, Knowledge Graph canvas, Timeline reconstruction, and GitHub sync. |
-| **4** | **Knowledge Graph Engine** | Planned | Multi-hop Cytoscape/D3 graph canvas, centrality algorithms, and neighborhood isolation. |
+| **4** | **Case Explorer & Knowledge Graph** | **Complete** | Connected Command Center, multi-filter Case Explorer, interactive SVG link canvas, zoom/fit toolbar, edge/node provenance inspection, and bidirectional routing. |
 | **5** | **Geospatial Intelligence** | Planned | MapLibre incident-density heatmaps and spatial coordinate clustering. |
 | **6** | **Modus Operandi Analysis** | Planned | Tactical feature vectors and explainable similarity matrix. |
 | **7** | **Temporal Analytics** | Planned | Deep multi-stream chronological alignment and sequence anomaly detection. |

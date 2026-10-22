@@ -238,20 +238,30 @@ export const ContextInspector: React.FC<ContextInspectorProps> = ({
               <span className="font-mono text-[10px] text-nexora-textSubtle uppercase tracking-wider">
                 Investigative Actions
               </span>
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-3 gap-1.5 text-xs">
                 <button
-                  onClick={() => onNavigateToModule && onNavigateToModule("knowledge-graph")}
-                  className="py-1.5 px-2 rounded bg-nexora-raised border border-nexora-border hover:bg-nexora-surface text-nexora-text font-medium flex items-center justify-center gap-1.5 transition-colors"
+                  onClick={() => onNavigateToModule && onNavigateToModule("cases")}
+                  className="py-1.5 px-1.5 rounded bg-nexora-raised border border-nexora-border hover:bg-nexora-surface text-nexora-text font-medium flex items-center justify-center gap-1 text-[11px] transition-colors"
+                  title="Open Cases Dossier"
                 >
-                  <Network className="w-3.5 h-3.5 text-nexora-purple" />
-                  <span>Trace In Graph</span>
+                  <FileText className="w-3 h-3 text-nexora-cyan" />
+                  <span>Dossier</span>
                 </button>
                 <button
-                  onClick={() => onNavigateToModule && onNavigateToModule("map")}
-                  className="py-1.5 px-2 rounded bg-nexora-raised border border-nexora-border hover:bg-nexora-surface text-nexora-text font-medium flex items-center justify-center gap-1.5 transition-colors"
+                  onClick={() => onNavigateToModule && onNavigateToModule("knowledge-graph")}
+                  className="py-1.5 px-1.5 rounded bg-nexora-raised border border-nexora-border hover:bg-nexora-surface text-nexora-text font-medium flex items-center justify-center gap-1 text-[11px] transition-colors"
+                  title="Trace in Knowledge Graph"
                 >
-                  <MapPin className="w-3.5 h-3.5 text-nexora-cyan" />
-                  <span>View On Map</span>
+                  <Network className="w-3 h-3 text-nexora-purple" />
+                  <span>Graph</span>
+                </button>
+                <button
+                  onClick={() => onNavigateToModule && onNavigateToModule("timeline")}
+                  className="py-1.5 px-1.5 rounded bg-nexora-raised border border-nexora-border hover:bg-nexora-surface text-nexora-text font-medium flex items-center justify-center gap-1 text-[11px] transition-colors"
+                  title="View Chronological Timeline"
+                >
+                  <Clock className="w-3 h-3 text-nexora-amber" />
+                  <span>Timeline</span>
                 </button>
               </div>
             </div>
