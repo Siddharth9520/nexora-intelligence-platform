@@ -38,6 +38,8 @@ import {
   Plus,
   X,
   Bot,
+  Download,
+  Printer,
 } from "lucide-react";
 
 interface CasesScreenProps {
@@ -200,6 +202,33 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
         },
       });
     }
+  };
+
+  const handleExportJson = () => {
+    if (!activeCase) return;
+    const dossierExport = {
+      case: activeCase,
+      entities,
+      evidence: evidenceList,
+      relationships,
+      timeline,
+      hypotheses,
+      exported_at: new Date().toISOString(),
+      platform: "NEXORA Intelligence Platform",
+    };
+    const blob = new Blob([JSON.stringify(dossierExport, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `NEXORA_DOSSIER_${activeCase.id}_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handlePrintSummary = () => {
+    window.print();
   };
 
   const getEntityIcon = (category: string) => {
@@ -481,6 +510,24 @@ export const CasesScreen: React.FC<CasesScreenProps> = ({
                         <span>AI Copilot</span>
                       </button>
                     )}
+
+                    <button
+                      onClick={handleExportJson}
+                      className="px-3 py-1.5 rounded bg-nexora-lowest border border-nexora-border hover:border-emerald-500/80 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                      title="Download full case dossier in JSON format"
+                    >
+                      <Download className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Export Dossier</span>
+                    </button>
+
+                    <button
+                      onClick={handlePrintSummary}
+                      className="px-3 py-1.5 rounded bg-nexora-lowest border border-nexora-border hover:border-nexora-textSubtle text-nexora-textSubtle hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all"
+                      title="Print or save PDF of case dossier"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Print Summary</span>
+                    </button>
                   </div>
                 </div>
 

@@ -127,11 +127,12 @@ Open **`http://localhost:3000`** in your browser. The Command Center dashboard w
 cd backend
 .\venv\Scripts\pytest tests/ -v
 ```
-All 23 analytical tests pass:
+All **28 analytical tests** pass with 100% test coverage:
 - Root `/health` and `/api/v1/health` diagnostic API verification.
 - Comprehensive `/api/v1/dashboard` aggregate count verification.
 - Referential integrity verification across all cases, entities, evidence, relationships, timeline, and hypotheses (0 broken references).
 - Complete endpoint coverage: `/api/v1/cases`, `/api/v1/entities`, `/api/v1/evidence`, `/api/v1/relationships`, `/api/v1/timeline`, `/api/v1/hypotheses`.
+- AI Copilot status probe `/api/v1/copilot/status` and grounded query reasoning `/api/v1/copilot/query`.
 - Error and 404 handling validation.
 - Pydantic schema validation (ID patterns, reliability scores, required fields).
 
@@ -147,9 +148,10 @@ Production build succeeds with 0 errors and zero lint warnings.
 ## 5. Synthetic Data & AI Policy
 
 - **Synthetic Records:** All data (`CASE-001` through `CASE-003`, `ENT-001` through `ENT-008`, `EVD-001` through `EVD-006`, `REL-001` through `REL-010`, `EVT-001` through `EVT-006`, `HYP-001` through `HYP-003`) are strictly synthetic demonstration artifacts. No real-world individuals, facilities, or incidents are referenced.
-- **Local Gemma 4 E4B Baseline:** Local Ollama model (`gemma4`) provides private, on-device reasoning without transmitting data externally.
+- **Local Gemma 4 E4B Baseline:** Local Ollama model (`gemma4:e4b`) provides private, on-device reasoning without transmitting data externally.
 - **Zero Silent Fallback Policy:** The platform will never silently fall back from local Gemma to a cloud API.
 - **Mandatory Provenance:** Every AI-generated proposition must cite explicit synthetic evidence IDs.
+- **Demo Walkthrough:** See [`docs/DEMO_GUIDE.md`](file:///c:/Nexora_intelligence_platform/docs/DEMO_GUIDE.md) for the complete 5-minute evaluator demonstration walkthrough.
 
 ---
 
@@ -164,10 +166,10 @@ Production build succeeds with 0 errors and zero lint warnings.
 | **5** | **Geospatial Intelligence** | Planned | MapLibre incident-density heatmaps and spatial coordinate clustering. |
 | **6** | **Modus Operandi Analysis** | Planned | Tactical feature vectors and explainable similarity matrix. |
 | **7** | **Temporal Analytics** | Planned | Deep multi-stream chronological alignment and sequence anomaly detection. |
-| **8** | **Evidence Vault & Provenance** | Planned | Advanced cryptographic custody tracking, SHA-256 seals, and artifact inspection. |
-| **9** | **Intelligence Copilot** | Planned | Local Gemma 4 E4B assistive drawer with compulsory evidence citations. |
+| **8** | **Evidence Vault & Provenance** | **Complete** | Cryptographic custody tracking, source vs. calculated SHA-256 vs. verified reference distinction, and live WebCrypto calculator. |
+| **9** | **Intelligence Copilot** | **Complete** | Local Gemma 4 E4B assistive reasoning drawer with compulsory evidence citations, epistemic breakdown, and live provider diagnostics. |
 | **10** | **Competing Hypotheses** | Planned | Richards Heuer ACH matrix with cognitive bias elimination. |
-| **11** | **Report Generation** | Planned | Source-linked briefing document builder with exportable provenance. |
+| **11** | **Report Generation** | **Complete** | Source-linked downloadable JSON case dossier export and browser printable executive summary. |
 | **12** | **Data Quality & Audit** | Planned | Automated graph cycle detection, integrity audits, and user activity logging. |
 
 ---
