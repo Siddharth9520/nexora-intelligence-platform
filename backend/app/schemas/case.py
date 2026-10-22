@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
@@ -32,16 +32,27 @@ class Case(BaseModel):
     entity_ids: List[str] = Field(default_factory=list, description="Associated entity identifiers")
     evidence_ids: List[str] = Field(default_factory=list, description="Associated evidence identifiers")
     tags: List[str] = Field(default_factory=list, description="Categorization and indexing tags")
+    classification: Optional[str] = Field(
+        default="SECRET // NOFORN",
+        description="Security classification level"
+    )
 
 
 class CaseSummary(BaseModel):
-    id: str
-    title: str
-    summary: str
-    status: str
-    priority: str
-    lead_analyst: str
-    incident_count: int
-    entity_count: int
-    evidence_count: int
-    updated_at: datetime
+    id: str = Field(..., description="Case identifier")
+    title: str = Field(..., description="Investigation title")
+    summary: str = Field(..., description="Case summary")
+    status: str = Field(default="active", description="Case status")
+    priority: str = Field(default="medium", description="Priority level")
+    lead_analyst: str = Field(..., description="Lead analyst")
+    incident_count: int = Field(default=0, description="Number of correlated incidents")
+    entity_count: int = Field(default=0, description="Number of correlated entities")
+    evidence_count: int = Field(default=0, description="Number of correlated evidence items")
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="Last updated timestamp"
+    )
+    classification: Optional[str] = Field(
+        default="SECRET // NOFORN",
+        description="Security classification level"
+    )
