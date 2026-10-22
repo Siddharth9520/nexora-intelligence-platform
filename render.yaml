@@ -1,0 +1,36 @@
+services:
+  # 1. FastAPI Python Analytical Backend
+  - type: web
+    name: nexora-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: AI_PROVIDER
+        value: none
+      - key: GEMINI_MODEL
+        value: gemini-1.5-pro
+
+  # 2. Next.js 14 Frontend Tactical Workstation
+  - type: web
+    name: nexora-frontend
+    env: node
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.x
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: nexora-backend
+          property: host
